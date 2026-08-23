@@ -1,0 +1,188 @@
+[
+  {
+    "chunk_id": "return_apparel_footwear::0",
+    "doc_id": "return_apparel_footwear",
+    "doc_title": "Return window -- Apparel & Footwear",
+    "text": "Apparel and footwear items can be returned within 30 days of delivery."
+  },
+  {
+    "chunk_id": "return_apparel_footwear::1",
+    "doc_id": "return_apparel_footwear",
+    "doc_title": "Return window -- Apparel & Footwear",
+    "text": "The item must be unused, unwashed, and returned with its original tags and packaging intact."
+  },
+  {
+    "chunk_id": "return_apparel_footwear::2",
+    "doc_id": "return_apparel_footwear",
+    "doc_title": "Return window -- Apparel & Footwear",
+    "text": "Innerwear, socks, and swimwear are not eligible for return once the hygiene seal has been broken."
+  },
+  {
+    "chunk_id": "return_electronics::0",
+    "doc_id": "return_electronics",
+    "doc_title": "Return window -- Electronics",
+    "text": "Most electronics can be returned within 10 days of delivery if the item is defective, damaged, or materially different from what was ordered."
+  },
+  {
+    "chunk_id": "return_electronics::1",
+    "doc_id": "return_electronics",
+    "doc_title": "Return window -- Electronics",
+    "text": "The original box, all accessories, and any free-gift items must be included."
+  },
+  {
+    "chunk_id": "return_electronics::2",
+    "doc_id": "return_electronics",
+    "doc_title": "Return window -- Electronics",
+    "text": "Electronics returned only because the customer changed their mind are not eligible after the box has been opened."
+  },
+  {
+    "chunk_id": "return_home::0",
+    "doc_id": "return_home",
+    "doc_title": "Return window -- Home & Furniture",
+    "text": "Home and furniture items follow a 15-day return window from the date of delivery."
+  },
+  {
+    "chunk_id": "return_home::1",
+    "doc_id": "return_home",
+    "doc_title": "Return window -- Home & Furniture",
+    "text": "Large furniture items require a reverse pickup rather than a courier drop-off, and the item must be repackaged in its original crate or box wherever possible."
+  },
+  {
+    "chunk_id": "return_beauty::0",
+    "doc_id": "return_beauty",
+    "doc_title": "Return window -- Beauty & Personal Care",
+    "text": "Beauty and personal care products can only be returned if they arrive damaged, expired, or incorrect, within 7 days of delivery."
+  },
+  {
+    "chunk_id": "return_beauty::1",
+    "doc_id": "return_beauty",
+    "doc_title": "Return window -- Beauty & Personal Care",
+    "text": "Opened cosmetics, skincare, or fragrance items cannot be returned for hygiene reasons unless the item itself is defective."
+  },
+  {
+    "chunk_id": "cod_refund_timeline::0",
+    "doc_id": "cod_refund_timeline",
+    "doc_title": "COD refund timeline",
+    "text": "For Cash on Delivery orders, refunds are issued to the customer's bank account or Flipkart wallet, since there is no original payment instrument to reverse."
+  },
+  {
+    "chunk_id": "cod_refund_timeline::1",
+    "doc_id": "cod_refund_timeline",
+    "doc_title": "COD refund timeline",
+    "text": "COD refunds are typically processed within 7-9 business days after the returned item passes a quality check at the warehouse."
+  },
+  {
+    "chunk_id": "cod_refund_timeline::2",
+    "doc_id": "cod_refund_timeline",
+    "doc_title": "COD refund timeline",
+    "text": "Customers must share valid bank account details for the refund to be initiated."
+  },
+  {
+    "chunk_id": "prepaid_refund_timeline::0",
+    "doc_id": "prepaid_refund_timeline",
+    "doc_title": "Prepaid refund timeline",
+    "text": "For prepaid orders paid by card, UPI, or wallet, refunds are credited back to the original payment method within 3-5 business days of the return being approved."
+  },
+  {
+    "chunk_id": "prepaid_refund_timeline::1",
+    "doc_id": "prepaid_refund_timeline",
+    "doc_title": "Prepaid refund timeline",
+    "text": "Card refunds may take a further 2-3 business days to reflect on the customer's statement depending on the issuing bank."
+  },
+  {
+    "chunk_id": "delivery_sla_standard::0",
+    "doc_id": "delivery_sla_standard",
+    "doc_title": "Standard delivery SLA",
+    "text": "Standard delivery for most in-stock items takes 2-7 business days depending on the destination pin code."
+  },
+  {
+    "chunk_id": "delivery_sla_standard::1",
+    "doc_id": "delivery_sla_standard",
+    "doc_title": "Standard delivery SLA",
+    "text": "Metro cities typically see delivery within 2-4 days, while remote or non-serviceable areas may take up to 7 days."
+  },
+  {
+    "chunk_id": "delivery_sla_express::0",
+    "doc_id": "delivery_sla_express",
+    "doc_title": "Express delivery SLA",
+    "text": "Express delivery, where available, guarantees next-day delivery for orders placed before the daily cutoff time shown at checkout."
+  },
+  {
+    "chunk_id": "delivery_sla_express::1",
+    "doc_id": "delivery_sla_express",
+    "doc_title": "Express delivery SLA",
+    "text": "Express delivery is currently limited to select metro and tier-1 city pin codes and select product categories."
+  },
+  {
+    "chunk_id": "reverse_pickup_eligibility::0",
+    "doc_id": "reverse_pickup_eligibility",
+    "doc_title": "Reverse pickup eligibility",
+    "text": "Reverse pickup, where a courier collects the return directly from the customer's address, is available in most serviceable pin codes for apparel, footwear, electronics, and home items above a minimum size threshold."
+  },
+  {
+    "chunk_id": "reverse_pickup_eligibility::1",
+    "doc_id": "reverse_pickup_eligibility",
+    "doc_title": "Reverse pickup eligibility",
+    "text": "The customer does not need to pack a shipping label themselves when reverse pickup is available -- the courier carries one."
+  },
+  {
+    "chunk_id": "reverse_pickup_unavailable::0",
+    "doc_id": "reverse_pickup_unavailable",
+    "doc_title": "Self-ship returns where reverse pickup is unavailable",
+    "text": "In pin codes where reverse pickup is not available, the customer must self-ship the item back using the prepaid shipping label provided in the Flipkart app."
+  },
+  {
+    "chunk_id": "reverse_pickup_unavailable::1",
+    "doc_id": "reverse_pickup_unavailable",
+    "doc_title": "Self-ship returns where reverse pickup is unavailable",
+    "text": "Self-ship return costs are reimbursed by Flipkart once the returned item is received and verified at the warehouse."
+  },
+  {
+    "chunk_id": "exchange_policy::0",
+    "doc_id": "exchange_policy",
+    "doc_title": "Exchange policy",
+    "text": "Apparel and footwear items can be exchanged for a different size within the same 30-day return window instead of a refund, subject to stock availability of the requested size."
+  },
+  {
+    "chunk_id": "exchange_policy::1",
+    "doc_id": "exchange_policy",
+    "doc_title": "Exchange policy",
+    "text": "Only one free exchange is allowed per order line item."
+  },
+  {
+    "chunk_id": "damaged_item_policy::0",
+    "doc_id": "damaged_item_policy",
+    "doc_title": "Damaged or wrong item received",
+    "text": "If an item arrives damaged, defective, or different from what was ordered, the customer should report it within 48 hours of delivery through the Flipkart app, ideally with photos."
+  },
+  {
+    "chunk_id": "damaged_item_policy::1",
+    "doc_id": "damaged_item_policy",
+    "doc_title": "Damaged or wrong item received",
+    "text": "Damaged or wrong-item claims are prioritized and typically resolved with a replacement or full refund without requiring the usual return-window wait."
+  },
+  {
+    "chunk_id": "cancellation_policy::0",
+    "doc_id": "cancellation_policy",
+    "doc_title": "Order cancellation policy",
+    "text": "Orders can be cancelled free of charge any time before they are shipped."
+  },
+  {
+    "chunk_id": "cancellation_policy::1",
+    "doc_id": "cancellation_policy",
+    "doc_title": "Order cancellation policy",
+    "text": "Once an order has shipped, it can no longer be cancelled and must instead be returned after delivery following the applicable category return window."
+  },
+  {
+    "chunk_id": "warranty_electronics::0",
+    "doc_id": "warranty_electronics",
+    "doc_title": "Warranty on electronics",
+    "text": "Most electronics carry a manufacturer warranty separate from Flipkart's own return window, typically ranging from 6 months to 2 years depending on the brand and product."
+  },
+  {
+    "chunk_id": "warranty_electronics::1",
+    "doc_id": "warranty_electronics",
+    "doc_title": "Warranty on electronics",
+    "text": "Warranty claims after the return window has closed are handled directly through the manufacturer's authorized service centers, not through a Flipkart return."
+  }
+]
