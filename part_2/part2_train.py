@@ -1,30 +1,3 @@
-"""
-Part 2 -- Product Image Categoriser via Transfer Learning
-Flipkart Order Intelligence & Support Assistant
-
-Covers Tasks 1-7:
-  1. Load Fashion-MNIST (pinned source, standard 60k/10k split, stratified val split)
-  2. Preprocess for a pretrained backbone (3-channel, resized, ImageNet-normalized)
-  3. Transfer-learning model: frozen ResNet-18 backbone + new head, trained on
-     CACHED frozen-backbone features (the documented CPU speed trick)
-  4. Fine-tune late layers only if feature-extraction val accuracy < 80%
-  5. Evaluate on the untouched test split: accuracy, confusion matrix, per-class P/R
-  6. Auto-report the top confused category pairs with a visual-similarity explanation
-  7. Save model weights to models/product_classifier.pt
-
-Task 8 (exporting real .png sample images) lives in export_sample_images.py,
-run AFTER this script, since it needs the trained model's predictions to be
-meaningful when Part 3 calls classify_product_image on them.
-
-Run:
-    python3 part2_train.py
-
-Requires (not available in every sandbox -- run this locally / on Colab):
-    pip install torch torchvision scikit-learn pandas numpy pillow
-Internet access is required once, to download Fashion-MNIST and the
-pretrained ResNet-18 ImageNet weights (both free and keyless).
-"""
-
 import json
 import time
 
@@ -48,15 +21,14 @@ CLASS_NAMES = [
     "Sandal", "Shirt", "Sneaker", "Bag", "Ankle boot",
 ]
 
-# Hyperparameters (documented per Task 3)
-IMG_SIZE = 224           # ResNet-18's standard expected input size
+IMG_SIZE = 224          
 BATCH_SIZE = 256
 HEAD_LR = 1e-3
 HEAD_EPOCHS = 15
 FINETUNE_LR = 1e-4
 FINETUNE_EPOCHS = 5
 FINETUNE_ACC_THRESHOLD = 0.80
-VAL_SIZE = 6000          # stratified out of the 60k train split (>= the required 5000)
+VAL_SIZE = 6000          
 
 REPORT_LINES = []
 
@@ -73,20 +45,14 @@ def log_header(title):
     log("=" * 78)
 
 
-# ---------------------------------------------------------------------------
-# Task 1 -- Load Fashion-MNIST, carve stratified validation split
-# ---------------------------------------------------------------------------
 log_header("TASK 1 -- LOAD FASHION-MNIST")
 
-# Pinned source: https://github.com/zalandoresearch/fashion-mnist
-# torchvision.datasets.FashionMNIST pulls from that same canonical dataset,
-# zero configuration, no login, no API key.
 raw_train = datasets.FashionMNIST(root="data", train=True, download=True)
 raw_test = datasets.FashionMNIST(root="data", train=False, download=True)
 
-train_images = raw_train.data.numpy()   # (60000, 28, 28) uint8
+train_images = raw_train.data.numpy()  
 train_labels = raw_train.targets.numpy()
-test_images = raw_test.data.numpy()     # (10000, 28, 28) uint8
+test_images = raw_test.data.numpy()     
 test_labels = raw_test.targets.numpy()
 
 train_idx, val_idx = train_test_split(
@@ -105,9 +71,6 @@ log(f"Validation split size (stratified out of train): {len(X_val_img)}")
 log(f"Test split size (untouched until final evaluation): {len(X_test_img)}")
 log(f"Classes ({len(CLASS_NAMES)}): {CLASS_NAMES}")
 
-# ---------------------------------------------------------------------------
-# Task 2 -- Preprocess for the pretrained backbone
-# ---------------------------------------------------------------------------
 log_header("TASK 2 -- PREPROCESSING FOR PRETRAINED BACKBONE")
 
 IMAGENET_MEAN = [0.485, 0.456, 0.406]
@@ -115,8 +78,8 @@ IMAGENET_STD = [0.229, 0.224, 0.225]
 
 preprocess = transforms.Compose([
     transforms.ToPILImage(),
-    transforms.Grayscale(num_output_channels=3),   # replicate 1 channel -> 3
-    transforms.Resize((IMG_SIZE, IMG_SIZE)),        # ResNet-18 expects 224x224
+    transforms.Grayscale(num_output_channels=3),   
+    transforms.Resize((IMG_SIZE, IMG_SIZE)),        
     transforms.ToTensor(),
     transforms.Normalize(mean=IMAGENET_MEAN, std=IMAGENET_STD),
 ])
@@ -133,17 +96,13 @@ def images_to_tensor_batches(images_uint8, batch_size=256):
         batch = torch.stack([preprocess(img) for img in chunk])
         yield batch
 
-
-# ---------------------------------------------------------------------------
-# Task 3 -- Transfer-learning model: frozen backbone + cached-feature head training
-# ---------------------------------------------------------------------------
 log_header("TASK 3 -- BUILD TRANSFER-LEARNING MODEL (feature extraction)")
 
 backbone = models.resnet18(weights=ResNet18_Weights.IMAGENET1K_V1)
-backbone.fc = nn.Identity()   # strip the original 1000-class head; we want the 512-d features
+backbone.fc = nn.Identity()  
 backbone.eval()
 for p in backbone.parameters():
-    p.requires_grad = False   # freeze all early/middle (and, for now, all) layers
+    p.requires_grad = False  
 backbone.to(DEVICE)
 
 log("Backbone: torchvision ResNet-18 (ImageNet-pretrained). All layers frozen "
@@ -152,15 +111,11 @@ log("Backbone: torchvision ResNet-18 (ImageNet-pretrained). All layers frozen "
 
 @torch.no_grad()
 def extract_features(images_uint8, batch_size=256, tag=""):
-    """Run the frozen backbone once over every image and cache the 512-d
-    feature vectors. This is the documented CPU speed trick: mathematically
-    identical to re-running the frozen backbone every epoch, but turns an
-    hours-long loop into one pass."""
     feats = []
     t0 = time.time()
     for i, batch in enumerate(images_to_tensor_batches(images_uint8, batch_size)):
         batch = batch.to(DEVICE)
-        out = backbone(batch)  # (B, 512)
+        out = backbone(batch)  
         feats.append(out.cpu())
     feats = torch.cat(feats, dim=0)
     log(f"Extracted {tag} features: {tuple(feats.shape)} in {time.time()-t0:.1f}s")
@@ -192,7 +147,7 @@ def evaluate_head_or_model(forward_fn, features_or_images, labels_t, is_end_to_e
     with torch.no_grad():
         if is_end_to_end:
             for batch in images_to_tensor_batches(features_or_images, BATCH_SIZE):
-                pass  # placeholder path not used; see evaluate_end_to_end below
+                pass 
         else:
             for start in range(0, len(features_or_images), BATCH_SIZE):
                 fb = features_or_images[start:start + BATCH_SIZE].to(DEVICE)
@@ -223,9 +178,6 @@ for epoch in range(1, HEAD_EPOCHS + 1):
 feature_extraction_val_acc = val_acc
 log(f"\nFeature-extraction-only validation accuracy: {feature_extraction_val_acc:.4f}")
 
-# ---------------------------------------------------------------------------
-# Task 4 -- Fine-tune late layers if needed
-# ---------------------------------------------------------------------------
 log_header("TASK 4 -- FINE-TUNE (only if needed)")
 
 fine_tuned = False
@@ -235,7 +187,6 @@ if feature_extraction_val_acc < FINETUNE_ACC_THRESHOLD:
         f"and fine-tuning end-to-end at a lower learning rate; layers 1-3 stay frozen.")
     fine_tuned = True
 
-    # Re-attach a real classifier head onto the backbone and unfreeze layer4 only
     backbone.fc = head
     for name, p in backbone.named_parameters():
         p.requires_grad = name.startswith("layer4") or name.startswith("fc")
@@ -298,13 +249,10 @@ else:
 log(f"\nBefore (feature-extraction-only) val accuracy: {feature_extraction_val_acc:.4f}")
 log(f"After ({'fine-tuning' if fine_tuned else 'no fine-tuning performed'}) val accuracy: {final_val_acc:.4f}")
 
-# ---------------------------------------------------------------------------
-# Task 5 -- Final evaluation on the untouched test split
-# ---------------------------------------------------------------------------
+
 log_header("TASK 5 -- FINAL TEST-SET EVALUATION")
 
 inference_model.eval()
-
 
 @torch.no_grad()
 def predict_all(images_uint8, batch_size=256):
@@ -342,15 +290,8 @@ if test_acc < 0.80:
         "as-is (not fabricated). See the confusion matrix and confused-pair "
         "diagnosis below for where the errors concentrate."
     )
-
-# ---------------------------------------------------------------------------
-# Task 6 -- Document confusion patterns (read directly off the real matrix)
-# ---------------------------------------------------------------------------
 log_header("TASK 6 -- CONFUSION PATTERN DIAGNOSIS")
 
-# Explanations for the pairs that are visually plausible confusions in
-# Fashion-MNIST at 28x28 grayscale resolution -- used only if that pair is
-# actually among the top real confusions found in THIS run's matrix.
 PLAUSIBLE_EXPLANATIONS = {
     frozenset(["Shirt", "T-shirt/top"]): (
         "Shirt and T-shirt/top share the same basic torso silhouette -- short "
@@ -427,9 +368,6 @@ for pair, count in top_pairs[:2]:
     log(f"\n{list(pair)[0]} <-> {list(pair)[1]} ({count} misclassifications):")
     log(explanation)
 
-# ---------------------------------------------------------------------------
-# Task 7 -- Save the artifact
-# ---------------------------------------------------------------------------
 log_header("TASK 7 -- SAVE ARTIFACT")
 
 torch.save({
@@ -438,7 +376,7 @@ torch.save({
     "img_size": IMG_SIZE,
     "imagenet_mean": IMAGENET_MEAN,
     "imagenet_std": IMAGENET_STD,
-    "model_kind": final_model_kind,   # "feature_extraction_only" or "fine_tuned_end_to_end"
+    "model_kind": final_model_kind,   
 }, "models/product_classifier.pt")
 log("Saved models/product_classifier.pt (state_dict + preprocessing metadata + class names)")
 
