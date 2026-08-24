@@ -32,7 +32,7 @@ flipkart-support-assistant/
 │   ├── data/
 │   │    └── sample_images/
 │   └── models/
-│        └── product_classifier.pt/
+│        └── product_classifier.pt
 │
 └── part_3/
     ├── agent_graph.py
@@ -48,7 +48,8 @@ flipkart-support-assistant/
     ├── tools.py
     ├── requirements.txt
     ├── models/
-    │   └── return_risk_model.pkl
+    │   ├── return_risk_model.pkl
+    │   └── product_classifier.pt
     ├── data/
     │   └── sample_images/
     ├── index/
