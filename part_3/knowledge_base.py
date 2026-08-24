@@ -1,19 +1,3 @@
-"""
-knowledge_base.py
-
-The actual policy text the RAG pipeline is grounded in. I wrote these myself
-(Flipkart-style, not copied from anywhere real) -- 14 short docs, each
-2-4 sentences, covering the topics the brief asks for: return windows by
-category, COD refund timelines, delivery SLAs, and reverse-pickup
-eligibility, plus a few extra ones so the agent has something to say for
-realistic follow-up questions too.
-
-Each doc has a stable doc_id -- chunking.py splits these into one chunk per
-sentence but always keeps a pointer back to doc_id, since Part 3 Task 10
-(retrieval eval) and the groundedness check both score at the DOCUMENT level,
-not the chunk level.
-"""
-
 POLICY_DOCS = [
     {
         "doc_id": "return_apparel_footwear",
