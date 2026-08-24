@@ -1,23 +1,6 @@
-"""
-agent_graph.py
-
-The actual LangGraph graph (Task 4 + Task 5). 5 nodes:
-    guardrail -> intent -> [retrieve | tool_call] -> generate
-
-One conditional edge (out of "intent") makes the graph actually branch by
-intent instead of always running every node. Short-term conversational state
-(specifically: the last order ID mentioned) is carried across turns using
-LangGraph's own MemorySaver checkpointer, keyed by thread_id -- reusing the
-same thread_id across invoke() calls carries state forward; a fresh
-thread_id starts with that state correctly absent. See
-transcripts/07_multiturn.md and transcripts/08_fresh_conversation.md.
-"""
-
 from typing import TypedDict, Optional, List
-
 from langgraph.graph import StateGraph, END
 from langgraph.checkpoint.memory import MemorySaver
-
 from guardrails import check_prompt_injection, check_groundedness
 from retriever import retrieve_chunks, dedupe_to_documents
 from tools import check_return_risk, classify_product_image
@@ -41,13 +24,9 @@ class AgentState(TypedDict, total=False):
     last_order_id: Optional[str]
     final_answer: dict
 
-
-# --- nodes -------------------------------------------------------------
-
 def guardrail_node(state: AgentState) -> dict:
     check = check_prompt_injection(state["user_input"])
     return {"blocked": check["blocked"], "block_reason": check["reason"]}
-
 
 def intent_node(state: AgentState) -> dict:
     if state.get("blocked"):
@@ -55,7 +34,6 @@ def intent_node(state: AgentState) -> dict:
 
     intent = classify_intent(state["user_input"])
     found_order_id = extract_order_id(state["user_input"])
-    # carry the last order id forward if this turn didn't mention a new one
     last_order_id = found_order_id or state.get("last_order_id")
     return {"intent": intent, "last_order_id": last_order_id}
 
@@ -116,9 +94,6 @@ def generate_node(state: AgentState) -> dict:
         answer = {"answer": "I couldn't tell what you're asking -- could you rephrase?",
                    "source": "policy_kb", "confidence": 0.0}
     return {"final_answer": answer}
-
-
-# --- graph assembly ------------------------------------------------------
 
 def build_graph():
     graph = StateGraph(AgentState)
