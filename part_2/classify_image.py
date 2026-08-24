@@ -1,16 +1,3 @@
-"""
-Part 2 -- documented loading + single-image prediction snippet.
-
-This is the exact function Part 3's classify_product_image(image_path) tool
-calls. It loads models/product_classifier.pt (saved by part2_train.py) and
-returns a predicted category label plus confidence for one image file.
-
-Usage:
-    from classify_image import classify_image
-    result = classify_image("data/sample_images/07_sneaker.png")
-    # -> {"predicted_class": "Sneaker", "confidence": 0.94, "all_probs": {...}}
-"""
-
 import torch
 import torch.nn as nn
 from torch.nn import functional as F
@@ -72,7 +59,7 @@ def classify_image(image_path: str) -> dict:
     ])
 
     img = Image.open(image_path)
-    tensor = preprocess(img).unsqueeze(0)  # (1, 3, H, W)
+    tensor = preprocess(img).unsqueeze(0) 
 
     with torch.no_grad():
         logits = model(tensor)
@@ -89,7 +76,6 @@ def classify_image(image_path: str) -> dict:
 
 
 if __name__ == "__main__":
-    # Quick manual smoke test against one of the exported sample images.
     import sys
     import glob
 
