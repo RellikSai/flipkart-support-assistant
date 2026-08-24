@@ -1,15 +1,4 @@
-"""
-retriever.py
-
-Loads the FAISS index built by build_index.py and answers similarity
-queries. Retrieval and the groundedness check both need document-level
-results (a doc can supply more than one of the top chunks), so
-dedupe_to_documents() collapses a ranked chunk list down to one row per
-parent doc_id, keeping each doc's best (highest-similarity) chunk score.
-"""
-
 import json
-
 import numpy as np
 import faiss
 from sentence_transformers import SentenceTransformer
@@ -35,8 +24,6 @@ def _lazy_load():
 
 
 def retrieve_chunks(query: str, k: int = 3):
-    """Returns the top-k chunks (dicts with chunk_id, doc_id, doc_title,
-    text, score), most similar first. score is cosine similarity in [-1, 1]."""
     model, index, chunk_meta = _lazy_load()
     q_emb = model.encode([query], convert_to_numpy=True)
     faiss.normalize_L2(q_emb)
@@ -53,8 +40,6 @@ def retrieve_chunks(query: str, k: int = 3):
 
 
 def dedupe_to_documents(chunks):
-    """Collapse a ranked chunk list to one row per parent doc_id, keeping
-    the best score seen for that doc. Order preserved by best score desc."""
     best_by_doc = {}
     for c in chunks:
         doc_id = c["doc_id"]
