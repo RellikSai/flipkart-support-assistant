@@ -29,8 +29,10 @@ flipkart-support-assistant/
 │   ├── part2_train.py
 │   ├── part2_summary.json
 │   ├── part2_REPORT.md
-│   └── data/
-│        └── sample_images/
+│   ├── data/
+│   │    └── sample_images/
+│   └── models/
+│        └── product_classifier.pt/
 │
 └── part_3/
     ├── agent_graph.py
