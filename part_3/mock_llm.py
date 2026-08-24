@@ -1,13 +1,3 @@
-"""
-mock_llm.py
-
-The default, required mode (Task 6). Zero network calls, zero API keys.
-Given retrieved KB chunks and/or tool output, deterministically composes the
-final structured answer. A live-LLM path can be swapped in later behind
-USE_LIVE_LLM=1 (see agent_graph.py) but every graded transcript runs against
-this file.
-"""
-
 import re
 
 from prompts import INTENT_FEWSHOT
@@ -36,14 +26,12 @@ def classify_intent(user_input: str) -> str:
     if ORDER_ID_PATTERN.search(user_input) or "return risk" in lower or "likely to be returned" in lower:
         return "return_risk"
 
-    # few-shot nearest-neighbor fallback
     best_intent, best_score = "policy", 0
     for ex in INTENT_FEWSHOT:
         score = _word_overlap(lower, ex["query"].lower())
         if score > best_score:
             best_score, best_intent = score, ex["intent"]
     return best_intent
-
 
 def extract_order_id(user_input: str):
     m = ORDER_ID_PATTERN.search(user_input)
