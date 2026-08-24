@@ -1,19 +1,3 @@
-"""
-guardrails.py
-
-Two guardrails, per Part 3 Task 8:
-
-1. Input-side prompt-injection filter -- a regex-based check that flags
-   inputs trying to override the system prompt ("ignore previous
-   instructions", "pretend you are...", etc). If it fires, the agent must
-   not comply with whatever was asked -- it just deflects.
-
-2. Output-side groundedness check -- refuses to answer a policy question if
-   nothing retrieved from the KB clears a minimum similarity threshold,
-   instead of letting the mock generator fabricate a policy that isn't
-   actually in the knowledge base.
-"""
-
 import re
 
 INJECTION_PATTERNS = [
@@ -29,8 +13,7 @@ INJECTION_PATTERNS = [
 ]
 _COMPILED_PATTERNS = [re.compile(p, re.IGNORECASE) for p in INJECTION_PATTERNS]
 
-MIN_SIMILARITY = 0.35  # cosine similarity floor for a policy answer to count as grounded
-
+MIN_SIMILARITY = 0.35 
 
 def check_prompt_injection(user_input: str) -> dict:
     """Returns {"blocked": bool, "reason": str|None, "matched_pattern": str|None}"""
