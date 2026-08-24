@@ -1,18 +1,5 @@
-"""
-eval_retrieval.py
-
-Part 3 Task 10. For each test query, I hand-picked which document(s) I'd
-consider "relevant" (the answer key below -- this is the same judgement
-call Task 1 asked for). Precision@3/Recall@3 are computed at the DOCUMENT
-level: the top-3 retrieved CHUNKS are mapped back to their parent doc_id and
-deduplicated before scoring, since two chunks from the same doc should not
-count as two separate hits.
-"""
-
 from retriever import retrieve_chunks, dedupe_to_documents
 
-# query -> set of relevant doc_ids (from knowledge_base.py). 1-2 docs each,
-# picked by reading the KB and judging which doc(s) actually answer the query.
 ANSWER_KEY = {
     "How many days do I have to return a pair of shoes I bought?": {"return_apparel_footwear"},
     "My laptop arrived with a cracked screen, can I return it?": {"return_electronics", "damaged_item_policy"},
