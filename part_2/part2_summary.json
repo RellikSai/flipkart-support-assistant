@@ -1,0 +1,7 @@
+{
+  "test_accuracy": 0.8876,
+  "feature_extraction_val_acc": 0.8965,
+  "final_val_acc": 0.8965,
+  "fine_tuned": false,
+  "model_kind": "feature_extraction_only"
+}
