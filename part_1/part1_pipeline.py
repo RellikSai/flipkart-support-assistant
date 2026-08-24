@@ -1,22 +1,3 @@
-"""
-Part 1 -- Return-Risk Scoring Pipeline
-Flipkart Order Intelligence & Support Assistant
-
-Runs Tasks 2-9 end to end:
-  - data verification (Task 2)
-  - leak-free preprocessing pipeline (Task 3)
-  - DummyClassifier baseline (Task 4)
-  - Logistic Regression + threshold sweep (Task 5)
-  - Random Forest + GridSearchCV (Task 6)
-  - feature importance + permutation importance (Task 7)
-  - subgroup / root-cause analysis (Task 8)
-  - final artifact save with t*_rf (Task 9)
-
-Run: python3 part1_pipeline.py
-Writes a full text report to REPORT.md and the final model to
-models/return_risk_model.pkl
-"""
-
 import io
 import json
 import contextlib
@@ -55,10 +36,6 @@ def log_header(title):
     log(title)
     log("=" * 78)
 
-
-# ---------------------------------------------------------------------------
-# Task 2 -- Load + verify the generated data
-# ---------------------------------------------------------------------------
 log_header("TASK 2 -- DATA VERIFICATION")
 
 df = pd.read_csv("orders_dataset.csv")
@@ -111,9 +88,6 @@ log(
     "(which would be MNAR) and not on nothing at all (which would be MCAR)."
 )
 
-# ---------------------------------------------------------------------------
-# Task 3 -- Preprocessing pipeline (no leakage)
-# ---------------------------------------------------------------------------
 log_header("TASK 3 -- PREPROCESSING PIPELINE (LEAK-FREE)")
 
 FEATURES = [
@@ -152,9 +126,6 @@ log(
     "transform() both X_train and X_test -- never fit on test data."
 )
 
-# ---------------------------------------------------------------------------
-# Task 4 -- Baseline DummyClassifier
-# ---------------------------------------------------------------------------
 log_header("TASK 4 -- BASELINE (DummyClassifier, most_frequent)")
 
 dummy_pipe = Pipeline(steps=[
@@ -179,9 +150,6 @@ log(
     "compared against this baseline nor evaluated on a metric aligned to that goal."
 )
 
-# ---------------------------------------------------------------------------
-# Task 5 -- Logistic Regression + threshold sweep
-# ---------------------------------------------------------------------------
 log_header("TASK 5 -- LOGISTIC REGRESSION + THRESHOLD SWEEP")
 
 logreg_pipe = Pipeline(steps=[
@@ -248,9 +216,6 @@ log(
     "risk-flagging tool where a missed return is more expensive than an extra review."
 )
 
-# ---------------------------------------------------------------------------
-# Task 6 -- Random Forest + GridSearchCV
-# ---------------------------------------------------------------------------
 log_header("TASK 6 -- RANDOM FOREST + GRIDSEARCHCV")
 
 rf_pipe = Pipeline(steps=[
@@ -278,12 +243,8 @@ log(f"Best cross-validated ROC-AUC: {best_cv_auc:.4f}")
 log(f"Held-out test-set ROC-AUC (winning config): {rf_test_auc:.4f}")
 log(f"Gap (|CV - test|): {abs(best_cv_auc - rf_test_auc):.4f}  (should be <= 0.05)")
 
-# ---------------------------------------------------------------------------
-# Task 7 -- Feature importance + permutation importance
-# ---------------------------------------------------------------------------
 log_header("TASK 7 -- FEATURE IMPORTANCE (impurity vs permutation)")
 
-# Recover feature names after ColumnTransformer
 fitted_prep = best_rf_pipe.named_steps["prep"]
 ohe = fitted_prep.named_transformers_["cat"].named_steps["onehot"]
 cat_feature_names = list(ohe.get_feature_names_out(CATEGORICAL))
@@ -296,14 +257,11 @@ impurity_top5 = impurity_importances.sort_values(ascending=False).head(5)
 log("Top-5 features by impurity-based .feature_importances_:")
 log(impurity_top5.to_string())
 
-# Permutation importance on the held-out test split, using the whole pipeline
-# (so it operates on the original raw X_test columns, not the transformed matrix)
 perm_result = permutation_importance(
     best_rf_pipe, X_test, y_test, n_repeats=10, random_state=RANDOM_STATE, scoring="roc_auc", n_jobs=-1
 )
 perm_importances = pd.Series(perm_result.importances_mean, index=X_test.columns)
 perm_top_for_same_features = perm_importances.reindex(
-    # map the one-hot top-5 back to their raw source column where applicable
     list({f.split("_")[0] if f not in NUMERIC else f for f in impurity_top5.index})
 ).dropna()
 
@@ -324,9 +282,6 @@ log(
     "because shuffling them barely changes the model's real predictive performance."
 )
 
-# ---------------------------------------------------------------------------
-# Task 8 -- Subgroup / root-cause analysis
-# ---------------------------------------------------------------------------
 log_header("TASK 8 -- SUBGROUP ANALYSIS")
 
 rf_pred_test_default = (rf_proba_test >= 0.5).astype(int)
@@ -378,9 +333,6 @@ log(
     "category's operating point."
 )
 
-# ---------------------------------------------------------------------------
-# Task 9 -- Save the final artifact + t*_rf
-# ---------------------------------------------------------------------------
 log_header("TASK 9 -- FINAL ARTIFACT + t*_rf")
 
 sweep_rf = threshold_sweep(y_test, rf_proba_test)
@@ -405,7 +357,6 @@ log(
 joblib.dump(best_rf_pipe, "models/return_risk_model.pkl")
 log("\nSaved final tuned Random Forest pipeline to models/return_risk_model.pkl")
 
-# Round-trip sanity check
 reloaded = joblib.load("models/return_risk_model.pkl")
 check_proba = reloaded.predict_proba(X_test.iloc[:5])[:, 1]
 log(f"Sanity check -- reloaded model predict_proba on first 5 test rows: {np.round(check_proba, 4).tolist()}")
@@ -414,9 +365,6 @@ with open("t_star_rf.json", "w") as f:
     json.dump({"t_star_rf": t_star_rf, "low_cut": low_cut, "high_cut": high_cut}, f, indent=2)
 log("Saved t_star_rf.json (consumed by Part 3's check_return_risk tool).")
 
-# ---------------------------------------------------------------------------
-# Write full report
-# ---------------------------------------------------------------------------
 with open("REPORT.md", "w") as f:
     f.write("# Part 1 -- Return-Risk Scoring Pipeline: Full Run Report\n\n```\n")
     f.write("\n".join(REPORT_LINES))
